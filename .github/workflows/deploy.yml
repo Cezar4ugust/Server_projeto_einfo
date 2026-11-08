@@ -29,8 +29,9 @@ jobs:
       - name: Build da imagem
         run: |
           docker build \
-            -t ghcr.io/github.cezar4ugust/server_projeto_einfo .
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            -t ghcr.io/${{ github.repository_owner }}/server_projeto_einfo:v1 .
 
       - name: Push da imagem
         run: |
-          docker push ghcr.io/github.cezar4ugust/server_projeto_einfo
+          docker push ghcr.io/${{ github.repository_owner }}/server_projeto_einfo:v1
