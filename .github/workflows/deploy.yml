@@ -1,0 +1,35 @@
+name: CI docker
+
+on:
+  push:
+    branches:
+      - master
+  
+  jobs:
+    build:
+      name: Build a Push GHCR
+      runs-on: ubuntu-latest
+
+      permissions:
+        contents: read
+        packages: write
+
+      steps:
+       - name: Baixar codigo
+         uses: actions/checkout@v4
+
+       - name: Login GHCR
+         uses: docker/login-actions@v3
+         with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+       - name: Build da imagem
+         run: |
+          docker build \
+          -t ghcr.io/github.cezar4ugust/projeto-einfo:v1 .
+
+       - name: push da imagem
+         run: | 
+          docker push ghcr.io/github.cezar4ugust/projeto-einfo:v1
