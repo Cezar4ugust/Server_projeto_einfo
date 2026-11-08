@@ -19,6 +19,9 @@ jobs:
       - name: Baixar código
         uses: actions/checkout@v4
 
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Login GHCR
         uses: docker/login-action@v3
         with:
@@ -26,11 +29,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build da imagem
-        run: |
-          docker build \
-            -t ghcr.io/${{ github.repository_owner }}/server_projeto_einfo:v1 .
-
-      - name: Push da imagem
-        run: |
-          docker push ghcr.io/${{ github.repository_owner }}/server_projeto_einfo:v1
+      - name: Build e Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          provenance: false
+          tags: ghcr.io/cezar4ugust/projeto-einfo:v1
+          labels: |
+            org.opencontainers.image.source=https://github.com/Cezar4ugust/Server_projeto_einfo
